@@ -1,8 +1,14 @@
 #!/bin/bash
 
-# Repo: @johnforfar/aws-intent-dashboard File: ./package-lambda.sh
+# Repo: @johnforfar/customer-intent-dashboard File: ./package-lambda.sh
 
 set -e
+
+# Set environment variables
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
+export AWS_DEFAULT_REGION=ap-southeast-4
+export AWS_ENDPOINT_URL=http://localhost:4566
 
 # Navigate to the backend package
 cd packages/backend

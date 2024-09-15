@@ -1,7 +1,7 @@
 {
-  "name": "@aws-intent-dashboard/frontend",
+  "name": "@customer-intent-dashboard/frontend",
   "version": "0.1.0",
-  "description": "Frontend package for aws-intent-dashboard (packages/frontend)",
+  "description": "Frontend package for customer-intent-dashboard (packages/frontend)",
   "author": "@johnforfar",
   "private": true,
   "dependencies": {

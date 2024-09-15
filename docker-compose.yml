@@ -1,4 +1,4 @@
-# Repo: @johnforfar/aws-intent-dashboard File: ./docker-compose.yml
+# Repo: @johnforfar/customer-intent-dashboard File: ./docker-compose.yml
 
 services:
   frontend:

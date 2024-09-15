@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/infra/bin/infra.ts
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/infra/bin/infra.ts
 /// <reference types="node" />
 
 import 'source-map-support/register';

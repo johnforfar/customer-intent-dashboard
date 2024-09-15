@@ -132,7 +132,5 @@ dist
 # dataset
 dataset.txt
 
-# Readme
-README.md
-
+# CDK
 cdk.out*

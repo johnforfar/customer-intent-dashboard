@@ -1,4 +1,4 @@
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/backend/src/utils/uploadData.ts
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/backend/src/utils/uploadData.ts
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import * as fs from 'fs';

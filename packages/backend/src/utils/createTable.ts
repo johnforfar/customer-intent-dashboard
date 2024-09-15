@@ -1,4 +1,4 @@
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/backend/src/utils/createTable.ts
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/backend/src/utils/createTable.ts
 import { DynamoDBClient, CreateTableCommand, CreateTableCommandInput } from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDBClient({

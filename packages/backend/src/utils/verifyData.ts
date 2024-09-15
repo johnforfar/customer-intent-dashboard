@@ -1,4 +1,4 @@
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/backend/src/utils/verifyData.ts
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/backend/src/utils/verifyData.ts
 import { DynamoDBClient, ListTablesCommand } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, ScanCommand, ScanCommandInput, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 

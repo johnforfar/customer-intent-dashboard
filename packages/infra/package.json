@@ -1,7 +1,7 @@
 {
-  "name": "@aws-intent-dashboard/infra",
+  "name": "@customer-intent-dashboard/infra",
   "version": "0.1.0",
-  "description": "Infrastructure package for aws-intent-dashboard (packages/infra)",
+  "description": "Infrastructure package for customer-intent-dashboard (packages/infra)",
   "author": "@johnforfar",
   "bin": {
     "infra": "bin/infra.js"
@@ -24,7 +24,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.158.0",
+    "aws-cdk-lib": "^2.158.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
   }

@@ -1,4 +1,4 @@
-// Repo: @johnforfar/aws-intent-dashboard // File: /packages/backend/src/server.ts
+// Repo: @johnforfar/customer-intent-dashboard // File: /packages/backend/src/server.ts
 
 import express from 'express';
 import cors from 'cors';

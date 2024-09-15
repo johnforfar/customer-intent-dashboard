@@ -1,4 +1,4 @@
-# Repo: @johnforfar/aws-intent-dashboard File: /packages/frontend/Dockerfile
+# Repo: @johnforfar/customer-intent-dashboard File: /packages/frontend/Dockerfile
 
 FROM node:14
 

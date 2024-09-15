@@ -1,6 +1,6 @@
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/frontend/src/App.tsx
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/frontend/src/App.tsx
 
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/frontend/src/App.tsx
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/frontend/src/App.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';

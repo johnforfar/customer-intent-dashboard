@@ -1,4 +1,4 @@
-// Repo: @johnforfar/aws-intent-dashboard File: /packages/backend/src/index.ts
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/backend/src/index.ts
 
 // packages/backend/src/index.ts
 

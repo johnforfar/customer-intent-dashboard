@@ -1,5 +1,5 @@
 {
-  "name": "aws-intent-dashboard",
+  "name": "customer-intent-dashboard",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -14,9 +14,9 @@
     "build": "npx lerna run build",
     "test": "npx lerna run test",
     "lint": "npx lerna run lint",
-    "start:frontend": "npx lerna run start --scope=@aws-intent-dashboard/frontend",
-    "start:backend": "npx lerna run start --scope=@aws-intent-dashboard/backend",
-    "deploy:infra": "npx lerna run deploy --scope=@aws-intent-dashboard/infra"
+    "start:frontend": "npx lerna run start --scope=@customer-intent-dashboard/frontend",
+    "start:backend": "npx lerna run start --scope=@customer-intent-dashboard/backend",
+    "deploy:infra": "npx lerna run deploy --scope=@customer-intent-dashboard/infra"
   },
   "devDependencies": {
     "@types/node": "^22.5.4",

@@ -1,7 +1,7 @@
 {
-  "name": "@aws-intent-dashboard/backend",
+  "name": "@customer-intent-dashboard/backend",
   "version": "1.0.0",
-  "description": "Backend package for aws-intent-dashboard (packages/backend)",
+  "description": "Backend package for customer-intent-dashboard (packages/backend)",
   "author": "@johnforfar",
   "private": true,
   "scripts": {

@@ -1,11 +1,11 @@
-# Repo: @johnforfar/aws-intent-dashboard File: ./Makefile
+# Repo: @johnforfar/customer-intent-dashboard File: ./Makefile
 
-# Makefile for aws-intent-dashboard
+# Makefile for customer-intent-dashboard
 
 # Variables
 DOCKER_COMPOSE := docker compose
 CDK := npx cdk
-PROJECT_NAME := aws-intent-dashboard
+PROJECT_NAME := customer-intent-dashboard
 
 # Phony targets
 .PHONY: install start stop deploy-local deploy-aws test build build-no-cache clean clean-docker dev-backend dev-frontend help
@@ -23,8 +23,12 @@ start:
 stop:
 	$(DOCKER_COMPOSE) down
 
+# Package and deploy Lambda function
+package-lambda:
+	source deploy-local.sh && ./package-lambda.sh
+
 # Deploy to local environment using LocalStack
-deploy-local: build
+deploy-local: build package-lambda
 	clear
 	$(DOCKER_COMPOSE) up -d localstack
 	sh deploy-local.sh
