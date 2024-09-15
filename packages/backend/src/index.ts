@@ -9,11 +9,13 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 const dynamoClient = new DynamoDBClient({
   region: process.env.AWS_DEFAULT_REGION || 'ap-southeast-4',
-  endpoint: process.env.DYNAMODB_ENDPOINT || 'http://localhost:4566',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'test',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'test',
-  },
+  ...(process.env.IS_LOCAL === 'true' && {
+    endpoint: process.env.DYNAMODB_ENDPOINT || 'http://localhost:4566',
+    credentials: {
+      accessKeyId: 'test',
+      secretAccessKey: 'test',
+    },
+  }),
 });
 
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
@@ -108,7 +110,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type,Authorization'
       },
       body: JSON.stringify(classifiedIntents),
     };
@@ -118,7 +122,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type,Authorization'
       },
       body: JSON.stringify({ 
         message: 'Internal server error', 

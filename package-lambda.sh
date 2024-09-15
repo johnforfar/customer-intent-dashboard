@@ -4,11 +4,13 @@
 
 set -e
 
-# Set environment variables
-export AWS_ACCESS_KEY_ID=test
-export AWS_SECRET_ACCESS_KEY=test
-export AWS_DEFAULT_REGION=ap-southeast-4
-export AWS_ENDPOINT_URL=http://localhost:4566
+# Set environment variables based on deployment type
+if [ "$IS_LOCAL" = "true" ]; then
+  export AWS_ACCESS_KEY_ID=test
+  export AWS_SECRET_ACCESS_KEY=test
+  export AWS_DEFAULT_REGION=ap-southeast-4
+  export AWS_ENDPOINT_URL=http://localhost:4566
+fi
 
 # Navigate to the backend package
 cd packages/backend
@@ -30,51 +32,68 @@ zip -r function.zip dist/* node_modules/@aws-sdk/*
 # Navigate back to the root
 cd ../..
 
-# Check if the Lambda function exists, create it if it doesn't
-if ! aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda get-function --function-name IntentProcessorFunction &>/dev/null; then
+if [ "$IS_LOCAL" = "true" ]; then
+  # Local deployment steps
+  # Check if the Lambda function exists, create it if it doesn't
+  if ! aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda get-function --function-name IntentProcessorFunction &>/dev/null; then
     echo "Creating Lambda function..."
     aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda create-function \
-        --function-name IntentProcessorFunction \
-        --runtime nodejs18.x \
-        --role arn:aws:iam::000000000000:role/lambda-role \
-        --handler dist/index.handler \
-        --zip-file fileb://packages/backend/function.zip
-else
+      --function-name IntentProcessorFunction \
+      --runtime nodejs18.x \
+      --role arn:aws:iam::000000000000:role/lambda-role \
+      --handler dist/index.handler \
+      --zip-file fileb://packages/backend/function.zip
+  else
     echo "Updating Lambda function code..."
     aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda update-function-code \
-        --function-name IntentProcessorFunction \
-        --zip-file fileb://packages/backend/function.zip
-fi
+      --function-name IntentProcessorFunction \
+      --zip-file fileb://packages/backend/function.zip
+  fi
 
-echo "Waiting for Lambda update to complete..."
-sleep 10
+  echo "Waiting for Lambda update to complete..."
+  sleep 10
 
-# Update the Lambda function configuration
-echo "Updating Lambda function configuration..."
-aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda update-function-configuration \
+  # Update the Lambda function configuration
+  echo "Updating Lambda function configuration..."
+  aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda update-function-configuration \
     --function-name IntentProcessorFunction \
     --handler dist/index.handler \
     --environment "Variables={IS_LOCAL=true,DYNAMODB_ENDPOINT=http://localstack:4566,TABLE_NAME=Intents,AWS_DEFAULT_REGION=ap-southeast-4,AWS_ACCESS_KEY_ID=test,AWS_SECRET_ACCESS_KEY=test}"
 
-echo "Waiting for Lambda configuration update to complete..."
-sleep 10
+  echo "Waiting for Lambda configuration update to complete..."
+  sleep 10
 
-# Invoke the Lambda function to test
-echo "Invoking Lambda function..."
-aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda invoke \
+  # Invoke the Lambda function to test
+  echo "Invoking Lambda function..."
+  aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda invoke \
     --function-name IntentProcessorFunction \
     --payload '{"path": "/api/intents", "httpMethod": "GET"}' \
     --cli-binary-format raw-in-base64-out \
     --log-type Tail \
     output.txt
 
-echo "Lambda function response:"
-cat output.txt
+  echo "Lambda function response:"
+  cat output.txt
 
-echo "Lambda function logs (base64 decoded):"
-aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda invoke \
+  echo "Lambda function logs (base64 decoded):"
+  aws --endpoint-url=http://localhost:4566 --no-cli-pager lambda invoke \
     --function-name IntentProcessorFunction \
     --payload '{"path": "/api/intents", "httpMethod": "GET"}' \
     --cli-binary-format raw-in-base64-out \
     --log-type Tail \
     /dev/null | jq -r '.LogResult' | base64 -d
+else
+  # AWS deployment steps
+  echo "Updating Lambda function..."
+  aws lambda update-function-code \
+    --function-name IntentProcessorFunction \
+    --zip-file fileb://packages/backend/function.zip
+
+  echo "Updating Lambda function configuration..."
+  aws lambda update-function-configuration \
+    --function-name IntentProcessorFunction \
+    --handler dist/index.handler \
+    --environment "Variables={TABLE_NAME=Intents,AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION}"
+
+  echo "Lambda function update complete."
+fi

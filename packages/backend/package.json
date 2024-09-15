@@ -7,7 +7,10 @@
   "scripts": {
     "build": "esbuild src/index.ts src/server.ts --bundle --minify --platform=node --target=node18 --outdir=dist --external:express --external:@aws-sdk/*",
     "start": "node dist/server.js",
-    "test": "jest"
+    "test": "jest",
+    "create-table": "ts-node src/utils/createTable.ts",
+    "upload-data": "ts-node src/utils/uploadData.ts",
+    "verify-data": "ts-node src/utils/verifyData.ts"
   },
   "dependencies": {
     "@aws-sdk/client-comprehend": "^3.651.1",

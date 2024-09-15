@@ -5,11 +5,13 @@ import { DynamoDBDocumentClient, ScanCommand, ScanCommandInput, DeleteCommand } 
 // Initialize DynamoDB client
 const client = new DynamoDBClient({
   region: process.env.AWS_DEFAULT_REGION || 'ap-southeast-4',
-  endpoint: process.env.AWS_ENDPOINT_URL || 'http://localhost:4566',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'test',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'test',
-  },
+  ...(process.env.IS_LOCAL === 'true' && {
+    endpoint: process.env.AWS_ENDPOINT_URL || 'http://localhost:4566',
+    credentials: {
+      accessKeyId: 'test',
+      secretAccessKey: 'test',
+    },
+  }),
 });
 
 const docClient = DynamoDBDocumentClient.from(client);

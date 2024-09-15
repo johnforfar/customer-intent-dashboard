@@ -11,7 +11,7 @@
     "watch": "tsc -w",
     "cdk": "cdk",
     "deploy": "cdk deploy",
-    "deploy:local": "CDK_DEPLOY_ACCOUNT=000000000000 CDK_DEPLOY_REGION=ap-southeast-4 LAMBDA_ENDPOINT=http://localhost:4566 cdk deploy --endpoint-url http://localhost:4566"
+    "deploy:local": "CDK_DEPLOY_ACCOUNT=000000000000 CDK_DEPLOY_REGION=ap-southeast-4 LAMBDA_ENDPOINT=http://localhost:4566 IS_LOCAL=true cdk deploy --context local=true --endpoint-url http://localhost:4566"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",

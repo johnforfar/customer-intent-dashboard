@@ -33,6 +33,14 @@ deploy-local: build package-lambda
 	$(DOCKER_COMPOSE) up -d localstack
 	sh deploy-local.sh
 
+# Deploy to AWS
+deploy-aws: build
+	sh deploy-aws.sh
+
+# Deploy to AWS with credentials from .env file
+deploy-aws-with-env: build
+	set -a; source .env; set +a; export AWS_ACCOUNT_ID=$$(aws sts get-caller-identity --query Account --output text); sh deploy-aws.sh
+
 # Build Docker images
 build:
 	$(DOCKER_COMPOSE) build
@@ -50,13 +58,6 @@ clean-docker:
 	docker volume prune -f
 	docker network prune -f
 	docker image prune -f
-
-# Deploy to AWS
-deploy-aws: build-all
-	cd packages/infra && \
-	$(CDK) deploy \
-		--require-approval never \
-		--context local=false
 
 # Run tests
 test:

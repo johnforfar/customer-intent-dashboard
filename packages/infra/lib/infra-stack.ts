@@ -1,8 +1,10 @@
+// Repo: @johnforfar/customer-intent-dashboard File: /packages/infra/lib/infra-stack.ts
 import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as path from 'path';
 import { Construct } from 'constructs';
 
 export class InfraStack extends cdk.Stack {
@@ -29,7 +31,7 @@ export class InfraStack extends cdk.Stack {
     const lambdaFunction = new lambda.Function(this, 'IntentProcessorFunction', {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'dist/index.handler',
-      code: lambda.Code.fromAsset('packages/backend'),
+      code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'backend')),
       environment: {
         TABLE_NAME: table.tableName,
         IS_LOCAL: isLocal ? 'true' : 'false',
@@ -45,6 +47,10 @@ export class InfraStack extends cdk.Stack {
       restApiName: 'Intents Service',
       deployOptions: {
         stageName: isLocal ? 'local' : 'prod',
+      },
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowMethods: apigateway.Cors.ALL_METHODS,
       },
     });
 
@@ -66,29 +72,6 @@ export class InfraStack extends cdk.Stack {
         principals: [new iam.AnyPrincipal()],
         actions: ['execute-api:Invoke'],
         resources: ['execute-api:/*/*/*'],
-      });
-      api.root.addResource('ANY', {
-        defaultMethodOptions: {
-          authorizationType: apigateway.AuthorizationType.NONE,
-          methodResponses: [{ statusCode: '200' }],
-        },
-      }).addMethod('ANY', new apigateway.MockIntegration(), {
-        authorizationType: apigateway.AuthorizationType.NONE,
-        methodResponses: [{ statusCode: '200' }],
-      });
-      api.addGatewayResponse('Default4xx', {
-        type: apigateway.ResponseType.DEFAULT_4XX,
-        responseHeaders: {
-          'Access-Control-Allow-Origin': "'*'",
-          'Access-Control-Allow-Headers': "'*'",
-        },
-      });
-      api.addGatewayResponse('Default5xx', {
-        type: apigateway.ResponseType.DEFAULT_5XX,
-        responseHeaders: {
-          'Access-Control-Allow-Origin': "'*'",
-          'Access-Control-Allow-Headers': "'*'",
-        },
       });
       (api.node.defaultChild as apigateway.CfnRestApi).addPropertyOverride('Policy', {
         Version: '2012-10-17',

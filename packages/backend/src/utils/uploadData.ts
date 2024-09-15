@@ -14,11 +14,13 @@ const isLocal = process.env.IS_LOCAL === 'true';
 
 const client = new DynamoDBClient({
   region: process.env.AWS_DEFAULT_REGION || 'ap-southeast-4',
-  endpoint: isLocal ? 'http://localhost:4566' : undefined,
-  credentials: isLocal ? {
-    accessKeyId: 'test',
-    secretAccessKey: 'test',
-  } : undefined,
+  ...(process.env.IS_LOCAL === 'true' && {
+    endpoint: process.env.AWS_ENDPOINT_URL || 'http://localhost:4566',
+    credentials: {
+      accessKeyId: 'test',
+      secretAccessKey: 'test',
+    },
+  }),
 });
 
 const docClient = DynamoDBDocumentClient.from(client);

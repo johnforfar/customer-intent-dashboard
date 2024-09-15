@@ -6,19 +6,27 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { InfraStack } from '../lib/infra-stack';
 
+// Initialize the CDK app
 const app = new cdk.App();
+
+// Determine if we're running in local mode
 const isLocal = app.node.tryGetContext('local') === 'true';
 
+// Define the environment for deployment
 const env: cdk.Environment = isLocal
   ? {
       account: '000000000000',
       region: 'ap-southeast-4',
     }
   : {
-      account: '565211267331',
-      region: 'ap-southeast-4',
+      account: process.env.AWS_ACCOUNT_ID,
+      region: process.env.AWS_DEFAULT_REGION || 'ap-southeast-4',
     };
 
+// Log the deployment environment
+console.log('Deploying to environment:', env);
+
+// Set up local environment variables if running locally
 if (isLocal) {
   process.env.CDK_DEPLOY_ACCOUNT = env.account;
   process.env.CDK_DEPLOY_REGION = env.region;
@@ -30,8 +38,13 @@ if (isLocal) {
   process.env.AWS_ENDPOINT_URL = 'http://localhost:4566';
 }
 
+// Create the main infrastructure stack
 const stack = new InfraStack(app, 'InfraStack', { env });
 
+// Add a tag to the stack if running locally
 if (isLocal) {
   cdk.Tags.of(stack).add('deployment', 'local');
 }
+
+// Synthesize the CloudFormation template
+app.synth();

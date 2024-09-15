@@ -134,3 +134,6 @@ dataset.txt
 
 # CDK
 cdk.out*
+
+# Ignore environment files
+packages/frontend/.env.production
