@@ -48,10 +48,8 @@ async function classifyIntent(text: string, method: 'keyword' | 'comprehend' | '
     case 'keyword':
       return classifyIntentKeyword(text);
     case 'comprehend':
-      // return classifyIntentComprehend(text);
       throw new Error('Comprehend classification not implemented');
     case 'local-model':
-      // return classifyIntentLocalModel(text);
       throw new Error('Local model classification not implemented');
     default:
       throw new Error('Invalid classification method');
@@ -86,6 +84,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   console.log('Lambda function invoked');
   console.log('Event:', JSON.stringify(event, null, 2));
 
+  const allowedOrigin = process.env.IS_LOCAL === 'true'
+    ? 'http://localhost:3000'
+    : 'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com';
+
   try {
     const command = new ScanCommand({
       TableName: process.env.TABLE_NAME || 'Intents',
@@ -110,7 +112,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com',
+        'Access-Control-Allow-Origin': allowedOrigin,
         'Access-Control-Allow-Methods': 'GET,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Authorization'
       },
@@ -122,7 +124,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com',
+        'Access-Control-Allow-Origin': allowedOrigin,
         'Access-Control-Allow-Methods': 'GET,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Authorization'
       },

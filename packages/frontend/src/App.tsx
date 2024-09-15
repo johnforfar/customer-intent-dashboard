@@ -1,11 +1,10 @@
 // Repo: @johnforfar/customer-intent-dashboard File: /packages/frontend/src/App.tsx
 
-// Repo: @johnforfar/customer-intent-dashboard File: /packages/frontend/src/App.tsx
-
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import './index.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

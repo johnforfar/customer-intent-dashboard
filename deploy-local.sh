@@ -29,6 +29,23 @@ aws --endpoint-url=http://localhost:4566 iam attach-role-policy \
     --role-name lambda-role \
     --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole || true
 
+# Set environment variables for CDK
+export CDK_DEPLOY_ACCOUNT=$CDK_DEPLOY_ACCOUNT
+export CDK_DEPLOY_REGION=$CDK_DEPLOY_REGION
+export CDK_DEFAULT_ACCOUNT=$CDK_DEFAULT_ACCOUNT
+export CDK_DEFAULT_REGION=$CDK_DEFAULT_REGION
+export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+export AWS_ENDPOINT_URL=$AWS_ENDPOINT_URL
+
+# Ensure CDK uses the local environment variables
+export CDK_DEFAULT_ACCOUNT=$CDK_DEPLOY_ACCOUNT
+export CDK_DEFAULT_REGION=$CDK_DEPLOY_REGION
+export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+export AWS_ENDPOINT_URL=$AWS_ENDPOINT_URL
+
 npx cdk deploy \
     --require-approval never \
     --context local=true \

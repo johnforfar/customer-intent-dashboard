@@ -49,7 +49,7 @@ export class InfraStack extends cdk.Stack {
         stageName: isLocal ? 'local' : 'prod',
       },
       defaultCorsPreflightOptions: {
-        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowOrigins: isLocal ? ['http://localhost:3000'] : ['http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com'],
         allowMethods: apigateway.Cors.ALL_METHODS,
       },
     });
