@@ -47,8 +47,8 @@ This project uses LocalStack to emulate AWS services locally, allowing for faste
 
 ## Deployment
 
-- Local deployment: `make deploy-local`
-- AWS deployment: `make deploy-aws` (Ensure AWS credentials are configured)
+- Local deployment: `docker compose build` & `docker compose up -d`
+- AWS deployment: `make deploy-aws-with-env` (Ensure AWS credentials are configured)
 
 ## Advanced Features
 
