@@ -1,0 +1,52 @@
+# Repo: @johnforfar/aws-intent-dashboard File: ./docker-compose.yml
+
+services:
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+    - IS_LOCAL=true
+    - AWS_ACCESS_KEY_ID=test
+    - AWS_SECRET_ACCESS_KEY=test
+    - AWS_DEFAULT_REGION=ap-southeast-4
+    - DYNAMODB_ENDPOINT=http://localstack:4566
+    - TABLE_NAME=Intents
+    networks:
+      - app-network
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566-4599:4566-4599"
+    environment:
+      - SERVICES=lambda,apigateway,dynamodb,cloudformation,iam,logs
+      - DEBUG=1
+      - LS_LOG=trace
+      - DATA_DIR=/tmp/localstack/data
+      - EXTRA_CORS_ALLOWED_ORIGINS=http://localhost:3000
+    volumes:
+      - localstack-data:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  localstack-data:

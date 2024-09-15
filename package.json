@@ -1,0 +1,30 @@
+{
+  "name": "aws-intent-dashboard",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "version": "1.0.0",
+  "description": "AWS Intent Dashboard Monorepo",
+  "author": "@johnforfar",
+  "main": "index.js",
+  "keywords": [],
+  "license": "ISC",
+  "scripts": {
+    "build": "npx lerna run build",
+    "test": "npx lerna run test",
+    "lint": "npx lerna run lint",
+    "start:frontend": "npx lerna run start --scope=@aws-intent-dashboard/frontend",
+    "start:backend": "npx lerna run start --scope=@aws-intent-dashboard/backend",
+    "deploy:infra": "npx lerna run deploy --scope=@aws-intent-dashboard/infra"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "lerna": "^8.1.8",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.x.x",
+    "@aws-sdk/lib-dynamodb": "^3.x.x"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "app": "npx ts-node --prefer-ts-exts bin/infra.ts",
+  "watch": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      "README.md",
+      "cdk*.json",
+      "**/*.d.ts",
+      "**/*.js",
+      "tsconfig.json",
+      "package*.json",
+      "yarn.lock",
+      "node_modules",
+      "test"
+    ]
+  },
+  "context": {
+    "local": "true",
+    "aws:cdk:bundling-stacks": ["**"],
+    "aws:cdk:disable-version-reporting": true,
+    "aws:cdk:use-context-lookup": true
+  }
+}
