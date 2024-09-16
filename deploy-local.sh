@@ -2,6 +2,8 @@
 
 # Repo: @johnforfar/customer-intent-dashboard File: ./deploy-local.sh
 
+set -e  # Exit immediately if a command exits with a non-zero status.
+
 export AWS_ACCESS_KEY_ID=test
 export AWS_SECRET_ACCESS_KEY=test
 export AWS_DEFAULT_REGION=ap-southeast-4
@@ -46,6 +48,7 @@ export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
 export AWS_ENDPOINT_URL=$AWS_ENDPOINT_URL
 
+# Deploy the CDK stack
 npx cdk deploy \
     --require-approval never \
     --context local=true \
@@ -57,3 +60,22 @@ npx cdk deploy \
     --no-path-metadata \
     --toolkit-stack-name CDKToolkit-local \
     --qualifier local
+
+# Set local API URL
+LOCAL_API_URL="http://localhost:4000"
+
+# Stop and remove existing frontend container if it exists
+docker stop frontend-local 2>/dev/null || true
+docker rm frontend-local 2>/dev/null || true
+
+# Build Docker image for local development
+echo "Building Docker image for local frontend..."
+docker build --build-arg REACT_APP_API_URL=$LOCAL_API_URL -t frontend-app-local ./packages/frontend
+
+# Start the local frontend container
+echo "Starting local frontend container..."
+docker run -d -p 3000:3000 --name frontend-local frontend-app-local
+
+echo "Local deployment complete."
+echo "Frontend is running at http://localhost:3000"
+echo "Backend API is available at $LOCAL_API_URL"

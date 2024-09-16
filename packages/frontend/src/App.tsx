@@ -15,25 +15,39 @@ interface Intent {
   classification: string;
 }
 
+// Use environment variable for API URL, or fall back to hardcoded value
+const API_URL = process.env.REACT_APP_API_URL || 'https://nh6zveh7m9.execute-api.ap-southeast-4.amazonaws.com/prod';
+console.log('API_URL being used:', API_URL);
+
 const App: React.FC = () => {
   const [intents, setIntents] = useState<Intent[]>([]);
   const [view, setView] = useState<'list' | 'chart'>('chart');
   const [classificationMethod, setClassificationMethod] = useState<'keyword' | 'comprehend' | 'local-model'>('keyword');
   const [totalIntents, setTotalIntents] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null); // New state for error handling
 
   const fetchIntents = useCallback(async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/intents`, {
+      console.log(`Fetching intents from: ${API_URL}/intents?method=${classificationMethod}`);
+      const response = await axios.get(`${API_URL}/intents`, {
         params: { method: classificationMethod }
       });
+      console.log('Response:', response);
       if (Array.isArray(response.data)) {
         setIntents(response.data);
         setTotalIntents(response.data.length);
+        setError(null); // Clear any previous errors
       } else {
         console.error('Expected an array of intents, got:', response.data);
+        setError('Received unexpected data format from the server');
       }
     } catch (error) {
       console.error('Error fetching intents:', error);
+      if (axios.isAxiosError(error)) {
+        setError(`Error: ${error.message}. Status: ${error.response?.status}. Data: ${JSON.stringify(error.response?.data)}`);
+      } else {
+        setError('An unknown error occurred');
+      }
     }
   }, [classificationMethod]);
 
@@ -107,6 +121,12 @@ const App: React.FC = () => {
       </Navbar>
 
       <div className="container mx-auto px-4 py-6 flex-grow flex flex-col">
+        {error && ( // Display error message if there is an error
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
         <div className="mb-4">
           <h2 className="text-2xl font-bold">Total Intents: {totalIntents}</h2>
         </div>

@@ -26,6 +26,7 @@ npx cdk deploy --require-approval never --context local=false
 
 # Get the API URL
 API_URL=$(aws cloudformation describe-stacks --stack-name InfraStack --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
+echo "REACT_APP_API_URL=$API_URL" > .env.production
 
 # Create DynamoDB table and upload data
 cd ../backend
@@ -40,6 +41,9 @@ cd ../frontend
 npm install
 echo "REACT_APP_API_URL=$API_URL" > .env.production
 npm run build
+
+# Build Docker image with the correct API_URL
+docker build --build-arg REACT_APP_API_URL=$API_URL -t frontend-app .
 
 # Create S3 bucket (if it doesn't exist)
 BUCKET_NAME="customer-intent-dashboard-frontend-$AWS_ACCOUNT_ID"
@@ -73,7 +77,18 @@ aws s3api put-bucket-policy --bucket $BUCKET_NAME --policy '{
     ]
 }'
 
-FRONTEND_URL="http://$BUCKET_NAME.s3-website-$AWS_DEFAULT_REGION.amazonaws.com"
+# Set CORS configuration for S3 bucket
+aws s3api put-bucket-cors --bucket $BUCKET_NAME --cors-configuration '{
+    "CORSRules": [
+        {
+            "AllowedOrigins": ["*"],
+            "AllowedMethods": ["GET", "HEAD"],
+            "AllowedHeaders": ["*"]
+        }
+    ]
+}'
+
+FRONTEND_URL="http://$BUCKET_NAME.s3-website.$AWS_DEFAULT_REGION.amazonaws.com"
 
 echo "Deployment complete."
 echo "API URL: $API_URL"

@@ -1,7 +1,5 @@
 // Repo: @johnforfar/customer-intent-dashboard File: /packages/backend/src/index.ts
 
-// packages/backend/src/index.ts
-
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
@@ -84,9 +82,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   console.log('Lambda function invoked');
   console.log('Event:', JSON.stringify(event, null, 2));
 
-  const allowedOrigin = process.env.IS_LOCAL === 'true'
-    ? 'http://localhost:3000'
-    : 'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com';
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://customer-intent-dashboard-frontend-565211267331.s3-website.ap-southeast-4.amazonaws.com'
+  ];
+  
+  const origin = event.headers.origin || '';
+  const allowedOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
 
   try {
     const command = new ScanCommand({

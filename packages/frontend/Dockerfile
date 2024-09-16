@@ -9,8 +9,9 @@ RUN npm install
 
 COPY . .
 
-# Set the environment variable
-ENV REACT_APP_API_URL=http://localhost:4000
+# Use build argument for REACT_APP_API_URL
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 EXPOSE 3000
 

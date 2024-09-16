@@ -1,6 +1,4 @@
-# Repo: @johnforfar/customer-intent-dashboard File: ./Makefile
-
-# Makefile for customer-intent-dashboard
+# Makefile for customer-intent-dashboard File: ./Makefile
 
 # Variables
 DOCKER_COMPOSE := docker compose
@@ -80,6 +78,13 @@ dev-backend:
 dev-frontend:
 	cd packages/frontend && npm run start
 
+# Build and run local frontend Docker container
+build-run-local-frontend:
+	docker build --build-arg REACT_APP_API_URL=http://localhost:4000 -t frontend-app-local ./packages/frontend
+	docker stop frontend-local 2>/dev/null || true
+	docker rm frontend-local 2>/dev/null || true
+	docker run -d -p 3000:3000 --name frontend-local frontend-app-local
+
 # Help command
 help:
 	@echo "Available commands:"
@@ -88,6 +93,7 @@ help:
 	@echo "  make stop            - Stop local development environment"
 	@echo "  make deploy-local    - Deploy to local environment (LocalStack)"
 	@echo "  make deploy-aws      - Deploy to AWS"
+	@echo "  make deploy-aws-with-env - Deploy to AWS using credentials from .env file"
 	@echo "  make test            - Run tests for all packages"
 	@echo "  make build           - Build Docker images"
 	@echo "  make build-no-cache  - Build Docker images with no cache"
@@ -95,6 +101,7 @@ help:
 	@echo "  make clean-docker    - Clean Docker containers, images, and volumes"
 	@echo "  make dev-backend     - Start backend in development mode"
 	@echo "  make dev-frontend    - Start frontend in development mode"
+	@echo "  make build-run-local-frontend - Build and run local frontend Docker container"
 
 # Default target
 .DEFAULT_GOAL := help
